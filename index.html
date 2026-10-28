@@ -37,8 +37,8 @@
   <link rel="manifest" href="site.webmanifest">
 
   <link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" href="assets/img/hero.webp" media="(min-width: 641px)">
-  <link rel="preload" as="image" href="assets/img/hero-m.webp" media="(max-width: 640px)">
+  <link rel="preload" as="image" href="assets/img/hero-poster.webp" media="(min-width: 641px)">
+  <link rel="preload" as="image" href="assets/img/hero-poster-m.webp" media="(max-width: 640px)">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -103,7 +103,7 @@
       <nav aria-label="Main">
         <ul class="nav-links">
           <li><a href="#services">Services</a></li>
-          <li><a href="#workshop">Workshop</a></li>
+          <li><a href="#symptoms">Symptoms</a></li>
           <li><a href="#team">Team</a></li>
           <li><a href="#visit">Visit</a></li>
         </ul>
@@ -123,7 +123,7 @@
     </div>
     <nav aria-label="Mobile">
       <a href="#services">Services</a>
-      <a href="#workshop">Workshop</a>
+      <a href="#symptoms">Symptoms</a>
       <a href="#team">Team</a>
       <a href="#book">Book</a>
       <a href="#visit">Visit</a>
@@ -137,20 +137,27 @@
   <main id="main">
     <section class="hero" id="top" aria-label="Introduction">
       <div class="hero-media" id="heroMedia">
-        <picture>
-          <source media="(max-width: 640px)" srcset="assets/img/hero-m.webp">
-          <img src="assets/img/hero.webp" width="2000" height="1333" alt="A car raised on a hoist inside a working mechanical workshop" fetchpriority="high">
-        </picture>
+        <video id="heroVideo" muted playsinline autoplay preload="auto" disablepictureinpicture
+          poster="assets/img/hero-poster.webp"
+          data-src="assets/video/hero.mp4" data-src-m="assets/video/hero-m.mp4" data-poster-m="assets/img/hero-poster-m.webp"
+          aria-label="A classic car on a hoist in a workshop as its headlights switch on"></video>
       </div>
       <div class="hero-glow" aria-hidden="true"></div>
-      <div class="hero-sweep" aria-hidden="true"></div>
       <canvas id="dust" aria-hidden="true"></canvas>
       <div class="hero-shade" aria-hidden="true"></div>
 
+
       <div class="wrap hero-content">
+        <a class="sticker" href="#book" aria-label="Book a service">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="ring" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
+            <text><textPath href="#ring" startOffset="0">BOOK A SERVICE &#8226; DE GRAAF UNDER-CAR &#8226; PRETORIA NORTH &#8226;</textPath></text>
+          </svg>
+          <img src="assets/img/car-mark.png" width="240" height="180" alt="">
+        </a>
         <h1 class="display">
           <span class="line"><span>Pretoria North's</span></span>
-          <span class="line"><span><span class="hl">under-car</span> specialists.</span></span>
+          <span class="line"><span><span class="hl swoosh">under-car<svg viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path d="M4 17 C 70 6, 150 4, 296 12"/></svg></span> specialists.</span></span>
         </h1>
         <p class="lede fade-up">Tyres, brakes, exhausts, suspension and full services for all makes, done properly at 239 Danie Theron Street.</p>
         <div class="hero-actions fade-up">
@@ -160,6 +167,7 @@
       </div>
     </section>
 
+    <div class="ticker-band">
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
         <ul>
@@ -169,6 +177,7 @@
           <li>Tyres</li><li>Batteries</li><li>Free flow exhausts</li><li>Wheel alignment</li><li>Suspension</li><li>Brake &amp; clutch overhauls</li><li>Services</li><li>Disc skimming</li><li>All mechanical repairs</li>
         </ul>
       </div>
+    </div>
     </div>
 
     <section class="section" id="services" aria-labelledby="services-title">
@@ -262,6 +271,36 @@
           <li class="reveal" style="--d:.16s"><strong>On the hoist, not guessed</strong>Your car goes up so the problem gets found, not assumed.</li>
           <li class="reveal" style="--d:.24s"><strong>Corner of Danie Theron &amp; Rachel de Beer</strong>Easy to find, easy to drop off in Pretoria North.</li>
         </ul>
+      </div>
+    </section>
+
+    <section class="section symptoms-wrap" id="symptoms" aria-labelledby="symptoms-title">
+      <div class="wrap">
+        <div class="symptoms reveal">
+          <div class="sym-left">
+            <h2 id="symptoms-title">What's your car telling you?</h2>
+            <p class="sym-lede">Pick what you're noticing. We'll tell you what it usually means.</p>
+            <div class="sym-list" role="radiogroup" aria-label="Symptoms">
+              <button type="button" role="radio" aria-checked="true" data-sym="squeal">Squeals when I brake</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="judder">Pedal judders</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="pull">Pulls to one side</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="bounce">Bouncy, clunks over bumps</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="rumble">Loud rumble underneath</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="start">Slow to start</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="clutch">Clutch slips</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="tyres">Tyres wearing unevenly</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="light">Service light is on</button>
+              <button type="button" role="radio" aria-checked="false" data-sym="other">Something else</button>
+            </div>
+          </div>
+          <div class="sym-card" aria-live="polite">
+            <span class="sym-icon" id="symIcon"><i class="ph ph-disc"></i></span>
+            <span class="sym-tag" id="symTag">Most likely</span>
+            <h3 id="symTitle">Worn brake pads or discs</h3>
+            <p id="symText">That squeal is the wear indicator asking for attention. Caught early, it's usually just pads.</p>
+            <button class="btn btn-dark magnetic" type="button" id="symBook"><span>Book a brake check</span><i class="ph ph-arrow-right"></i></button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -418,6 +457,7 @@
   </main>
 
   <footer class="footer">
+    <div class="road" aria-hidden="true"><img src="assets/img/car-mark-y.png" width="240" height="180" alt=""></div>
     <div class="wrap">
       <div class="footer-grid">
         <div>

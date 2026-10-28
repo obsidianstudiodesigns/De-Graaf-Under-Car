@@ -12,15 +12,36 @@
 
   $$('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 
-  /* ---------- hero: lights on ---------- */
+  /* ---------- hero: video, copy lands when the headlights strike ---------- */
   const hero = $('.hero');
-  const heroImg = $('.hero-media img');
-  const lightUp = () => requestAnimationFrame(() => hero.classList.add('lit'));
-  if (reduce) hero.classList.add('lit');
-  else if (heroImg.complete) lightUp();
-  else {
-    heroImg.addEventListener('load', lightUp, { once: true });
-    setTimeout(lightUp, 1800);
+  const video = $('#heroVideo');
+  const HEADLIGHTS_ON = 1.0;  // seconds into the clip
+  const LOOP_FROM = 1.54;     // the file ends on this frame (ping-pong), so looping here is seamless
+  const lightUp = () => hero.classList.add('lit');
+  const mobile = matchMedia('(max-width: 640px)').matches;
+  if (mobile) video.poster = video.dataset.posterM;
+  video.src = mobile ? video.dataset.srcM : video.dataset.src;
+
+  if (reduce) {
+    // no motion: park on a frame with the lights on
+    video.removeAttribute('autoplay');
+    video.preload = 'auto';
+    video.addEventListener('loadeddata', () => { video.currentTime = 3; }, { once: true });
+    lightUp();
+  } else {
+    const onTime = () => {
+      if (video.currentTime >= HEADLIGHTS_ON) { lightUp(); video.removeEventListener('timeupdate', onTime); }
+    };
+    video.addEventListener('timeupdate', onTime);
+    video.addEventListener('playing', () => hero.classList.add('playing'), { once: true });
+    video.addEventListener('ended', () => { video.currentTime = LOOP_FROM; video.play(); });
+    const p = video.play();
+    if (p && p.catch) p.catch(() => lightUp());   // autoplay blocked (e.g. low-power mode): poster + copy
+    setTimeout(lightUp, 2600);                     // never leave the copy hidden on a slow connection
+    // pause off-screen to save battery
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { const r = video.play(); if (r && r.catch) r.catch(() => {}); } else video.pause();
+    }).observe(hero);
   }
 
   /* ---------- hero: floating dust caught in the light ---------- */
@@ -162,6 +183,45 @@
     });
   });
 
+  /* ---------- symptom finder ---------- */
+  const SYMPTOMS = {
+    squeal: { icon: 'ph-disc', title: 'Worn brake pads or discs', text: 'That squeal is the wear indicator asking for attention. Caught early, it\'s usually just pads.', service: 'Brakes & clutch', cta: 'Book a brake check' },
+    judder: { icon: 'ph-gear-fine', title: 'Warped brake discs', text: 'A shaking pedal usually means the discs have run out of true. Skimming often fixes it without new discs.', service: 'Disc skimming', cta: 'Book disc skimming' },
+    pull: { icon: 'ph-steering-wheel', title: 'Wheel alignment is out', text: 'A pothole or kerb knock can throw it off. It also eats the inside of your tyres.', service: 'Wheel alignment', cta: 'Book an alignment' },
+    bounce: { icon: 'ph-wrench', title: 'Tired shocks or bushes', text: 'Worn suspension means longer stopping and a car that floats. We\'ll check shocks, bushes and arms.', service: 'Suspension', cta: 'Book a suspension check' },
+    rumble: { icon: 'ph-wind', title: 'A blown or rusted exhaust', text: 'A hole or loose joint gets loud fast. We repair, replace or build a free flow system.', service: 'Free flow exhaust', cta: 'Book an exhaust check' },
+    start: { icon: 'ph-car-battery', title: 'A battery on its way out', text: 'Slow cranking on cold mornings is the classic sign. We test it and fit a new one if needed.', service: 'Battery', cta: 'Book a battery test' },
+    clutch: { icon: 'ph-gear', title: 'A worn clutch', text: 'Revs climb but the car doesn\'t pull? The clutch plate is likely worn. We overhaul or replace it.', service: 'Brakes & clutch', cta: 'Book a clutch check' },
+    tyres: { icon: 'ph-tire', title: 'Tyres, alignment or both', text: 'Uneven wear usually points to alignment. We\'ll check both and only replace what\'s needed.', service: 'Tyres', cta: 'Book a tyre check' },
+    light: { icon: 'ph-engine', title: 'Time for a service', text: 'Oil, filters, plugs and a proper check-over, done on all makes.', service: 'Service', cta: 'Book a service' },
+    other: { icon: 'ph-toolbox', title: 'Bring it in, we\'ll find it', text: 'Odd noise, smell or feeling? Tell us what you notice and we\'ll put it on the hoist.', service: 'Mechanical repair', cta: 'Book a check-up' },
+  };
+  const symCard = $('.sym-card');
+  let symService = 'Brakes & clutch';
+  $$('.sym-list button').forEach((b) => b.addEventListener('click', () => {
+    const s = SYMPTOMS[b.dataset.sym];
+    $$('.sym-list button').forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+    $('#symIcon').innerHTML = `<i class="ph ${s.icon}"></i>`;
+    $('#symTitle').textContent = s.title;
+    $('#symText').textContent = s.text;
+    $('#symBook span').textContent = s.cta;
+    symService = s.service;
+    symCard.classList.remove('swap'); void symCard.offsetWidth; symCard.classList.add('swap');
+  }));
+  $('#symBook').addEventListener('click', () => {
+    const box = $(`#bookingForm input[name="service"][value="${CSS.escape(symService)}"]`);
+    if (box) box.checked = true;
+    $('#serviceField').classList.remove('invalid');
+    $('#book').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    setTimeout(() => $('#f-name').focus({ preventScroll: true }), reduce ? 0 : 900);
+  });
+
+  /* footer car */
+  const road = $('.road');
+  new IntersectionObserver(([e], obs) => {
+    if (e.isIntersecting) { road.classList.add('in'); obs.disconnect(); }
+  }, { threshold: 0 }).observe($('.footer'));
+
   /* ---------- portrait tilt ---------- */
   const card = $('#tilt');
   if (card && finePointer && !reduce) {
@@ -188,10 +248,6 @@
     // hero drifts and dims as you leave it
     gsap.to('.hero-content', {
       yPercent: -18, opacity: 0.2, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-    });
-    gsap.to('.hero-media picture', {
-      yPercent: 12, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
     });
     // nav tucks away while scrolling down, returns on the way up
