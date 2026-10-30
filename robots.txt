@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://obsidianstudiodesigns.github.io/De-Graaf-Under-Car/sitemap.xml
+Sitemap: https://degraafundercarpta.co.za/sitemap.xml
