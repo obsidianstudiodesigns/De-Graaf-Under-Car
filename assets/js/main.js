@@ -3,7 +3,7 @@
 
   // Where bookings go. WhatsApp bookings reach Quintin (sales); email bookings are relayed by FormSubmit.
   const WHATSAPP_NUMBER = '27836488596';
-  const BOOKING_EMAIL = 'obsidianstudiodesigns@gmail.com';
+  const BOOKING_EMAIL = 'sales@degraafundercarpta.co.za';
 
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
