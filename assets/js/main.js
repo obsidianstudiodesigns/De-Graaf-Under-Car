@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  // Where bookings go. WhatsApp bookings reach Quintin (sales); email bookings are relayed by FormSubmit.
-  const WHATSAPP_NUMBER = '27836488596';
+  // Where bookings go. WhatsApp bookings reach the workshop cell; email bookings are relayed by FormSubmit.
+  const WHATSAPP_NUMBER = '27662169833';
   const BOOKING_EMAIL = 'sales@degraafundercarpta.co.za';
 
   const $ = (s, el = document) => el.querySelector(s);
@@ -339,7 +339,7 @@
 
     if (mode === 'whatsapp') {
       const lines = [
-        'Hi Quintin, I would like to book my car in at De Graaf Under-Car.',
+        'Hi, I would like to book my car in at De Graaf Under-Car.',
         '',
         `*Name:* ${d.name}`,
         `*Phone:* ${d.phone}`,
